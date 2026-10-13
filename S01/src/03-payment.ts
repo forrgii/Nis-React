@@ -12,9 +12,24 @@ export type Payment =
     | { kind: "transfer"; iban: string };
 
 export function describePayment(payment: Payment): string {
-    throw new Error("не реализовано");
+     switch (payment.kind) {
+        case "card":
+            return `Карта: ****${payment.last4}`;
+        case "cash":
+            return `Наличные: ${payment.amount}`;
+        case "transfer":
+            return `Перевод: ${payment.iban}`;
+        default:
+            throw new Error(`Необработанный платёж: ${JSON.stringify(payment)}`);
+    }
 }
 
 export function total(payments: Payment[]): number {
-    throw new Error("не реализовано");
+     let sum = 0;
+    for (const p of payments) {
+        if (p.kind === "cash") {
+            sum += p.amount;
+        }
+    }
+    return sum;
 }

@@ -29,6 +29,26 @@ export const defaultRules: Rules = {
     age: (value) => value > 0,
 };
 
+function validateField<K extends keyof IFormData>(
+    field: K,
+    data: IFormData,
+    rules: Rules,
+): string | undefined {
+    return rules[field](data[field])
+        ? undefined
+        : `Поле '${field}' не прошло валидацию`;
+}
+
 export function validateForm(data: IFormData, rules: Rules): Errors {
-    throw new Error("не реализовано");
+    const errors: Errors = {};
+    const fields: (keyof IFormData)[] = ["username", "email", "age"];
+
+    for (const field of fields) {
+        const message = validateField(field, data, rules);
+        if (message !== undefined) {
+            errors[field] = message;
+        }
+    }
+
+    return errors;
 }

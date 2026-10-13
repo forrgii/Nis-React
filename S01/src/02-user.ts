@@ -17,5 +17,17 @@ export type User = {
 };
 
 export function describeUser(user: User): string {
-    throw new Error("не реализовано");
+    const agePart = user.age !== undefined
+        ? `Возраст: ${user.age}.`
+        : "Возраст не указан.";
+
+    const hobbiesPart = user.hobbies.length === 0
+        ? "Хобби нет."
+        : `Хобби: ${user.hobbies.join(", ")}.`;
+
+    const contactPart = "email" in user.contact
+        ? `Email: ${user.contact.email}`
+        : `Телефон: ${user.contact.phone}`;
+
+    return `${user.name}. ${agePart} ${hobbiesPart}\n${contactPart}`;
 }
