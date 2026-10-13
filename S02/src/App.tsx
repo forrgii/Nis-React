@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect, useReducer, useCallback } from "react";
-import { products } from "./data";
+import { products, type Product } from "./data";
 import { Header } from "./components/Header";
 import { SearchBar } from "./components/SearchBar";
 import { ProductList } from "./components/ProductList";
@@ -26,7 +26,6 @@ export default function App() {
         });
     }, [query, onlyInStock]);
 
-    // Сводка корзины
     const totalCount = useMemo(
         () => cart.items.reduce((sum, i) => sum + i.qty, 0),
         [cart.items]
@@ -36,22 +35,20 @@ export default function App() {
         [cart.items]
     );
 
-    // Быстрый доступ к количеству по id — понадобится в шаге 3
     const qtyById = useMemo(() => {
         const map: Record<number, number> = {};
         for (const item of cart.items) map[item.id] = item.qty;
         return map;
     }, [cart.items]);
 
-    const handleAdd = useCallback(
-        (product: Parameters<typeof dispatch>[0] extends any ? any : any) => {
-            dispatch({ type: "add", product });
-        },
-        []
-    );
+    const handleAdd = useCallback((product: Product) => {
+        dispatch({ type: "add", product });
+    }, []);
+
     const handleRemove = useCallback((id: number) => {
         dispatch({ type: "remove", id });
     }, []);
+
     const handleClear = useCallback(() => {
         dispatch({ type: "clear" });
     }, []);

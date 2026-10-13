@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Product } from "../data";
 
 type Props = {
@@ -7,7 +8,14 @@ type Props = {
     onRemove: (id: number) => void;
 };
 
-export function ProductCard({ product, qty, onAdd, onRemove }: Props) {
+export const ProductCard = memo(function ProductCard({
+    product,
+    qty,
+    onAdd,
+    onRemove,
+}: Props) {
+    console.log("render", product.id);
+
     return (
         <div className="product-card">
             <h3>{product.title}</h3>
@@ -16,20 +24,20 @@ export function ProductCard({ product, qty, onAdd, onRemove }: Props) {
                 {product.inStock ? "В наличии" : "Нет в наличии"}
             </p>
 
-            {!product.inStock && (
-                <button disabled>В корзину</button>
-            )}
+            {!product.inStock && <button disabled>В корзину</button>}
 
             {product.inStock && qty === 0 && (
                 <button onClick={() => onAdd(product)}>В корзину</button>
             )}
 
             {product.inStock && qty > 0 && (
-            <div className="cart-controls">
-                <button onClick={() => onAdd(product)}>В корзине: {qty}</button>
-                <button onClick={() => onRemove(product.id)}>Убрать</button>
-            </div>
-)}
+                <div className="cart-controls">
+                    <button onClick={() => onAdd(product)}>
+                        В корзине: {qty}
+                    </button>
+                    <button onClick={() => onRemove(product.id)}>Убрать</button>
+                </div>
+            )}
         </div>
     );
-}
+});
